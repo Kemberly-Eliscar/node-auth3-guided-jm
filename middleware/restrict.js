@@ -9,7 +9,7 @@ function restrict() {
 	
 	return async (req, res, next) => {
 		try {
-			const token = req.headers.authorization
+			const { token } = req.cookies // this gives us the value of token from the cookie jar
 			if (!token) {
 				return res.status(401).json(authError)
 			}
