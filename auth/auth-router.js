@@ -48,9 +48,11 @@ router.post("/login", async (req, res, next) => {
 		//generate a new JWT
 		const token = jwt.sign(payload, process.env.JWT_SECRET)
 
+		// sends a Set-Cookie header with the value of the token
+		res.cookie("token", token)
+		
 		res.json({
-			message: `Welcome ${user.username}!`,
-			token: token, 
+			message: `Welcome ${user.username}!`, 
 		})
 	} catch(err) {
 		next(err)
