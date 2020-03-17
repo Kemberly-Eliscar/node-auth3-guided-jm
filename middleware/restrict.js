@@ -19,7 +19,7 @@ function restrict() {
 					return res.status(401).json(authError)
 				}
 
-				req.token = decoded
+				req.token = decoded // this is the value of the decoded token
 				console.log(decoded)
 
 				next()
