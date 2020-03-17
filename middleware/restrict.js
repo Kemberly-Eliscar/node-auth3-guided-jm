@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 const Users = require("../users/users-model")
 
 function restrict() {
@@ -8,22 +9,21 @@ function restrict() {
 	
 	return async (req, res, next) => {
 		try {
-			const { username, password } = req.headers
-			if (!username || !password) {
+			const { token } = req.cookies // this gives us the value of token from the cookie jar
+			if (!token) {
 				return res.status(401).json(authError)
 			}
+			// verify the token's signature
+			jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+				if (err) {
+					return res.status(401).json(authError)
+				}
 
-			const user = await Users.findBy({ username }).first()
-			if (!user) {
-				return res.status(401).json(authError)
-			}
+				req.token = decoded // this is the value of the decoded token
+				console.log(decoded)
 
-			const passwordValid = await bcrypt.compare(password, user.password)
-			if (!passwordValid) {
-				return res.status(401).json(authError)
-			}
-
-			next()
+				next()
+			})
 		} catch(err) {
 			next(err)
 		}

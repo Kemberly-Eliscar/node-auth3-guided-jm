@@ -1,6 +1,7 @@
 const express = require("express")
 const helmet = require("helmet")
 const cors = require("cors")
+const cookieParser = require("cookie-parser")
 const authRouter = require("./auth/auth-router")
 const usersRouter = require("./users/users-router")
 
@@ -10,6 +11,7 @@ const port = process.env.PORT || 5000
 server.use(cors())
 server.use(helmet())
 server.use(express.json())
+server.use(cookieParser())
 
 server.use("/auth", authRouter)
 server.use("/users", usersRouter)
